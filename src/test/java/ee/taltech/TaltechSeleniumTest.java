@@ -23,11 +23,11 @@ import static ee.taltech.SeleniumUtils.*;
 /**
  * The type Taltech selenium test.
  */
-// Основной класс для запуска тестирования сайта
+
 public class TaltechSeleniumTest {
 	/**
 	 * The Driver.
-	 * Объявляем объект для работы с драйвером, который будет управлять браузером.
+
 	 */
 	static WebDriver driver;
 
@@ -36,20 +36,11 @@ public class TaltechSeleniumTest {
 	 */
 	@BeforeAll
 	static void beforeAll() {
-		// Селениум требует явно указать, где лежит драйвер браузера, а Селенид делает автоматически
+
 		System.setProperty("webdriver.chrome.driver", "C:\\Autotests\\chromedriver.exe");
-
-		// Подготавливаем опции для браузера Chrome.
 		ChromeOptions options = getChromeOptions();
-
-		// Конфигурацию для драйвера для Селениума надо создавать вручную,
-		// Создаем драйвер на основе подготовленных опций
 		driver = new ChromeDriver(options);
-
-		// Раскрываем браузер на весь экран
 		driver.manage().window().maximize();
-
-		// Устанавливаем время таймаута ожидания элементов на 20 секунд
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 	}
 
@@ -58,12 +49,8 @@ public class TaltechSeleniumTest {
 	 */
 	@AfterEach
 	public void tearDown() {
-		// Возвращаемся на главное окно
-		// Для переключения на нужную вкладку приходится писать больше кода
-		// Собираем список всех вкладок браузера
+
 		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
-		// Первый элемент из списка вкладок - основная тестируемая вкладка,
-		// переключаемся на нее
 		driver.switchTo().window(tabs.get(0));
 	}
 
@@ -133,18 +120,13 @@ public class TaltechSeleniumTest {
 					"ESTONIAN,ÕIS"
 			})
 	public void MenuTest(String language, String text) throws IOException {
-		// Ищем на сайте кнопку с текстом на конкретном языке и кликаем по нему
-		// Драйвер явно передаем в качестве параметра, так как он не виден глобально во
-		// время выполнения автоматических тестов, Селенид же в свою очередь сам выбирает драйвер
+
 		try {
 			find(driver, language, text).click();
 		}
 		catch (Exception exception)
 		{
-			// Просим Аллюр добавить к результату теста приложение в виде скриншота
 			Allure.addAttachment("Element not found!", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
-
-			// Повторно отправляем исключение, чтобы тест считался непройденным.
 			throw exception;
 		}
 
@@ -153,8 +135,7 @@ public class TaltechSeleniumTest {
 	/**
 	 * After all.
 	 */
-// Селениум не умеет самостоятельно закрывать браузер после своей работы, поэтому
-	// просим метод, который срабатывает после выполнения всех остальных методов, закрыть драйвер.
+
 	@AfterAll
 	static void afterAll() {
 		driver.quit();

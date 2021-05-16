@@ -12,59 +12,27 @@ import org.junit.jupiter.params.provider.*;
 import static com.codeborne.selenide.Selenide.*;
 import static ee.taltech.SelenideUtils.*;
 
-/**
- * The type Taltech selenide test.
- * Тест-кейс для тестирования информационного меню студента.
- */
-// Основной класс для запуска тестирования сайта
+
 public class TaltechSelenideTest {
-	/**
-	 * Before all.
-	 * Метод, который будет вызван один раз до всех тестов.
-	 * Используется для начальной настройки браузера и драйвера,
-	 * который будет общаться с браузером и управлять им.
-	 */
+
 	@BeforeAll
 	static void beforeAll() {
 
-		// Если возникнут ошибки, будем делать скриншоты
-		// Настраиваем создание скриншотов, если возникнут ошибки во время тестирования
-		// Пример использования: https://javabydeveloper.com/junit-5-with-allure-reports-example/
+
+		// code example: https://javabydeveloper.com/junit-5-with-allure-reports-example/
 		SelenideLogger.addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
-
-		// Браузер настраивается из специализированного класса
 		Configuration.browser = TaltechFactory.class.getName();
-
-		// Растягиваем браузер на весь экран
 		Configuration.startMaximized = true;
-
-		// Увеличиваем таймаут до 20 секунд
 		Configuration.timeout = 20000;
 	}
 
-	/**
-	 * Tear down.
-	 * Метод, который вызывается после выполнения каждого теста.
-	 * Нужен для того, чтобы возвращать фокус на главную вкладку, где тестируется информационное меню студента.
-	 */
+
 	@AfterEach
 	public void tearDown() {
-		// Возвращаемся на главное окно
+
 		Selenide.switchTo().window(0);
 	}
 
-	/**
-	 * Menu test.
-	 * Основной параметризированный тест
-	 *
-	 * Пример использования параметров для генерации тестов: https://www.baeldung.com/parameterized-tests-junit-5
-	 * @param language язык сайта, который должен быть установлен на время выполнения теста.
-	 * @param text     текст элемента, который мы ищем.
-	 */
-
-	// В названии каждого теста будет порядковый номер, язык и текст элемента.
-	// Всё это составляет название теста во время выполнения.
-	// Параметры описаны в табличном формате CSV.
 	@ParameterizedTest(name = "{index} {0} : {1}")
 	@CsvSource(
 			{
@@ -123,7 +91,7 @@ public class TaltechSelenideTest {
 					"ESTONIAN,ÕIS"
 			})
 	public void MenuTest(String language, String text) {
-		// Ищем на сайте кнопку с текстом на конкретном языке и кликаем по нему
+
 		$(find(language, text)).click();
 	}
 }
