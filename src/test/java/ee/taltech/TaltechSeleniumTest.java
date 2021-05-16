@@ -132,9 +132,7 @@ public class TaltechSeleniumTest {
 
 	}
 
-	/**
-	 * After all.
-	 */
+
 
 	@AfterAll
 	static void afterAll() {
