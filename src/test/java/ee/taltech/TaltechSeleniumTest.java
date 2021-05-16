@@ -56,7 +56,7 @@ public class TaltechSeleniumTest {
 
 	/**
 	 * Menu test.
-	 *
+
 	 * @param language the language
 	 * @param text     the text
 	 * @throws IOException the io exception
