@@ -20,32 +20,61 @@ import java.util.concurrent.*;
 import static ee.taltech.SeleniumUtils.*;
 
 
+/**
+ * The type Taltech selenium test.
+ */
 // Основной класс для запуска тестирования сайта
 public class TaltechSeleniumTest {
+	/**
+	 * The Driver.
+	 * Объявляем объект для работы с драйвером, который будет управлять браузером.
+	 */
 	static WebDriver driver;
 
+	/**
+	 * Before all.
+	 */
 	@BeforeAll
 	static void beforeAll() {
 		// Селениум требует явно указать, где лежит драйвер браузера, а Селенид делает автоматически
 		System.setProperty("webdriver.chrome.driver", "C:\\Autotests\\chromedriver.exe");
 
+		// Подготавливаем опции для браузера Chrome.
 		ChromeOptions options = getChromeOptions();
 
-		// Конфигурацию для драйвера для Селениума надо создавать вручную
+		// Конфигурацию для драйвера для Селениума надо создавать вручную,
+		// Создаем драйвер на основе подготовленных опций
 		driver = new ChromeDriver(options);
+
+		// Раскрываем браузер на весь экран
 		driver.manage().window().maximize();
+
+		// Устанавливаем время таймаута ожидания элементов на 20 секунд
 		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 	}
 
+	/**
+	 * Tear down.
+	 */
 	@AfterEach
 	public void tearDown() {
 		// Возвращаемся на главное окно
 		// Для переключения на нужную вкладку приходится писать больше кода
+		// Собираем список всех вкладок браузера
 		ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
+		// Первый элемент из списка вкладок - основная тестируемая вкладка,
+		// переключаемся на нее
 		driver.switchTo().window(tabs.get(0));
 	}
 
-	// https://www.baeldung.com/parameterized-tests-junit-5
+	/**
+	 * Menu test.
+	 *
+	 * @param language the language
+	 * @param text     the text
+	 * @throws IOException the io exception
+	 */
+// https://www.baeldung.com/parameterized-tests-junit-5
 	@ParameterizedTest(name = "{index} {0} : {1}")
 	@CsvSource(
 			{
@@ -112,13 +141,19 @@ public class TaltechSeleniumTest {
 		}
 		catch (Exception exception)
 		{
+			// Просим Аллюр добавить к результату теста приложение в виде скриншота
 			Allure.addAttachment("Element not found!", new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
+
+			// Повторно отправляем исключение, чтобы тест считался непройденным.
 			throw exception;
 		}
 
 	}
 
-	// Селениум не умеет самостоятельно закрывать браузер после своей работы, поэтому
+	/**
+	 * After all.
+	 */
+// Селениум не умеет самостоятельно закрывать браузер после своей работы, поэтому
 	// просим метод, который срабатывает после выполнения всех остальных методов, закрыть драйвер.
 	@AfterAll
 	static void afterAll() {
