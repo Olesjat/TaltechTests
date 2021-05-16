@@ -1,0 +1,75 @@
+<html lang="et" data-react-helmet="lang"><head><meta charset="utf-8"><link rel="icon" href="/favicon_32x32.ico?v=2"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000"><meta name="description" content="TalTech Tudengiportaal"><link rel="manifest" href="/manifest.json"><title>TalTech Tudengiportaal</title><script type="text/javascript" async="" defer="" src="https://matomo.taltech.ee/matomo.js"></script><script type="text/javascript">var environment="production",matomoId="8";if(window.isMatomoActive=function(){return"production"===environment&&matomoId&&-1===matomoId.indexOf("REACT_APP_ANALYTICS_ID")},isMatomoActive()){console.log("%cStarting Matomo track on ID: "+matomoId,"background: #222; color: #bada55;");var _paq=window._paq||[];_paq.push(["trackPageView"]),_paq.push(["enableLinkTracking"]),function(){var t="https://matomo.taltech.ee/";_paq.push(["setTrackerUrl",t+"matomo.php"]),_paq.push(["setSiteId",matomoId]);var o=document,a=o.createElement("script"),e=o.getElementsByTagName("script")[0];a.type="text/javascript",a.async=!0,a.defer=!0,a.src=t+"matomo.js",e.parentNode.insertBefore(a,e)}()}</script><link href="/static/css/2.d91f16ba.chunk.css" rel="stylesheet"><link href="/static/css/main.3d0e3f3d.chunk.css" rel="stylesheet"><script type="text/javascript">// Promises 
+var _eid_promises = {}; 
+// Turn the incoming message from extension 
+// into pending Promise resolving 
+window.addEventListener("message", function(event) { 
+    if(event.source !== window) return; 
+    if(event.data.src && (event.data.src === "background.js")) { 
+        console.log("Page received: "); 
+        console.log(event.data); 
+        // Get the promise 
+        if(event.data.nonce) { 
+            var p = _eid_promises[event.data.nonce]; 
+            // resolve 
+            if(event.data.result === "ok") { 
+                if(event.data.signature !== undefined) { 
+                    p.resolve({hex: event.data.signature}); 
+                } else if(event.data.version !== undefined) { 
+                    p.resolve(event.data.extension + "/" + event.data.version); 
+                } else if(event.data.cert !== undefined) { 
+                    p.resolve({hex: event.data.cert}); 
+                } else { 
+                    console.log("No idea how to handle message"); 
+                    console.log(event.data); 
+                } 
+            } else { 
+                // reject 
+                p.reject(new Error(event.data.result)); 
+            } 
+            delete _eid_promises[event.data.nonce]; 
+        } else { 
+            console.log("No nonce in event msg"); 
+        } 
+    } 
+}, false); 
+ 
+ 
+function TokenSigning() { 
+    function nonce() { 
+        var val = ""; 
+        var hex = "abcdefghijklmnopqrstuvwxyz0123456789"; 
+        for(var i = 0; i < 16; i++) val += hex.charAt(Math.floor(Math.random() * hex.length)); 
+        return val; 
+    } 
+ 
+    function messagePromise(msg) { 
+        return new Promise(function(resolve, reject) { 
+            // amend with necessary metadata 
+            msg["nonce"] = nonce(); 
+            msg["src"] = "page.js"; 
+            // send message 
+            window.postMessage(msg, "*"); 
+            // and store promise callbacks 
+            _eid_promises[msg.nonce] = { 
+                resolve: resolve, 
+                reject: reject 
+            }; 
+        }); 
+    } 
+    this.getCertificate = function(options) { 
+        var msg = {type: "CERT", lang: options.lang, filter: options.filter}; 
+        console.log("getCertificate()"); 
+        return messagePromise(msg); 
+    }; 
+    this.sign = function(cert, hash, options) { 
+        var msg = {type: "SIGN", cert: cert.hex, hash: hash.hex, hashtype: hash.type, lang: options.lang, info: options.info}; 
+        console.log("sign()"); 
+        return messagePromise(msg); 
+    }; 
+    this.getVersion = function() { 
+        console.log("getVersion()"); 
+        return messagePromise({ 
+            type: "VERSION" 
+        }); 
+    }; 
+}</script><script src="https://matomo.taltech.ee/plugins/HeatmapSessionRecording/configs.php?idsite=8&amp;trackerid=L48wLD&amp;url=https%3A%2F%2Fstudent.taltech.ee%2F" async="" defer=""></script><meta name="description" content="TalTech Tudengiportaal" data-react-helmet="true"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"><div><header class="tt-desktop-header tt-header tt-header--desktop"><nav class="tt-level1"><div class="tt-level1__inner"><a href="#main-content-id" target="_self" class="tt-link tt-link--styled tt-level1__link tt-level1__skip"><span class="tt-link__content"><span class="tt-link__text">Mine sisuni</span></span></a><ul class="tt-level1__nav"></ul><div class="tt-level1__right"><div class="tt-search"><button type="button" aria-label="Otsi nime, ruumi numbri, struktuuriüksuse või hoone järgi" class="tt-search__button tt-search__button--disabled" disabled=""><span class="tt-icon tt-search__icon"><svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="tt-icon__svg"><path d="M11.003 5C7.688 5 5 7.601 5 10.809s2.688 5.809 6.003 5.809a6.115 6.115 0 003.428-1.04l4.54 4.392c.04.04.107.04.146.003l.855-.828c.04-.038.036-.104-.003-.141l-4.48-4.336a5.68 5.68 0 001.516-3.86C17.005 7.602 14.318 5 11.003 5zm0 10.934c-2.925 0-5.297-2.294-5.297-5.125 0-2.83 2.372-5.126 5.297-5.126s5.296 2.295 5.296 5.126c0 2.83-2.371 5.125-5.296 5.125z"></path></svg></span></button><label for="header-search" class="sr-only">Otsi nime, ruumi numbri, struktuuriüksuse või hoone järgi</label><input type="search" id="header-search" name="searchBox" class="form-control tt-search__input" placeholder="Otsi nime, ruumi numbri, struktuuriüksuse või hoone järgi" value=""></div></div></div></nav><nav class="tt-level2"><div class="tt-level2__inner"><div class="tt-level2__brand"><a aria-current="page" class="tt-link tt-logo tt-logo--white tt-logo--sm tt-link--active" target="_self" aria-label="Tudengiportaal" href="/"><span class="tt-link__content"><span class="tt-link__text"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 48" width="1em" height="1em"><defs><linearGradient id="logo_gradient" x1="33" y1="-5" x2="46" y2="53" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#d263cc"></stop><stop offset="0.08" stop-color="#d051b7"></stop><stop offset="0.23" stop-color="#cd3596"></stop><stop offset="0.31" stop-color="#cc2a89"></stop><stop offset="0.49" stop-color="#cc2a89"></stop><stop offset="0.72" stop-color="#cc2a89"></stop><stop offset="0.85" stop-color="#bb398d"></stop><stop offset="0.87" stop-color="#b93b8d"></stop><stop offset="1" stop-color="#9d5c96"></stop></linearGradient></defs><path id="tt-logo-svg" fill="url(#logo_gradient)" d="M5.74 23.13V7.29H0V1.61h17.93v5.68h-5.71v15.84zm25.06 0l-.8-2.51h-7.7l-.77 2.51h-7.31l7.89-21.52h8.15l7.89 21.52zM26.18 8l-2.11 6.94h4.23zm13.14 15.13V1.61h6.48v15.84h8.11v5.68zM5.74 46V30.16H0v-5.68h17.93v5.68h-5.71V46zm13.67 0V24.48h16.24v5.68h-9.76v2.13h9.53V38h-9.53v2.35h9.76V46zm17.34-10.74c0-6.65 5.07-11.14 11.77-11.14a10 10 0 019.72 6.27L52.66 33a4.54 4.54 0 00-4.14-3.13 5.14 5.14 0 00-5.2 5.39 5.14 5.14 0 005.2 5.39 4.55 4.55 0 004.14-3.13l5.58 2.58a10.09 10.09 0 01-9.72 6.29c-6.7 0-11.77-4.52-11.77-11.13zM73.52 46v-8.22h-7.67V46h-6.48V24.48h6.48v7.62h7.67v-7.62H80V46z"></path></svg></span></span></a></div><div class="tt-level2__nav"></div><div class="tt-profile"><div role="button" tabindex="0" class="tt-profile__user" aria-haspopup="true" aria-expanded="false"><div class="tt-profile__names"><p class="tt-profile__first-name"></p><p class="tt-profile__last-name"></p></div><div class="tt-profile__avatar"><img alt="" role="presentation" src="/static/media/avatar_placeholder.624af172.svg" class="tt-profile__img"></div></div></div></div></nav></header><main class="" id="main-content-id"><div class="container container--with-footer container--body container"><div class="Toastify"></div><div class="tt-loader tt-loader--fullscreen tt-loader--md"><div class="tt-loader__container"><div class="tt-loader__square tt-loader__square--4"></div><div class="tt-loader__square tt-loader__square--2"></div><div class="tt-loader__square tt-loader__square--1"></div><div class="tt-loader__square tt-loader__square--3"></div></div></div></div></main><footer class="footer-collapse"><button type="button" class="tt-btn footer-collapse__toggle btn btn-primary btn-block"><span class="btn__content"><span class="btn__text"><span class="arrows"></span>Kiirviited</span></span></button><div class="footer-collapse__wrap"><div class="container footer-collapse__container container--body container"><div class="footer-collapse__inner"><div class="footer-scrollable"><h4 class="footer-scrollable__title">Kiirviited</h4><div class="footer-scrollable__placeholder"><p></p><p></p></div></div></div></div></div></footer></div></div><script>(window.MSInputMethodContext&&document.documentMode||-1!==navigator.appVersion.indexOf("MSIE 10"))&&(document.getElementById("root").innerHTML="Teie browser pole toetatud<br />Your browser is not supported")</script><script>!function(e){function t(t){for(var n,o,c=t[0],i=t[1],f=t[2],l=0,d=[];l<c.length;l++)o=c[l],Object.prototype.hasOwnProperty.call(a,o)&&a[o]&&d.push(a[o][0]),a[o]=0;for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n]);for(s&&s(t);d.length;)d.shift()();return u.push.apply(u,f||[]),r()}function r(){for(var e,t=0;t<u.length;t++){for(var r=u[t],n=!0,o=1;o<r.length;o++){var i=r[o];0!==a[i]&&(n=!1)}n&&(u.splice(t--,1),e=c(c.s=r[0]))}return e}var n={},o={1:0},a={1:0},u=[];function c(t){if(n[t])return n[t].exports;var r=n[t]={i:t,l:!1,exports:{}};return e[t].call(r.exports,r,r.exports,c),r.l=!0,r.exports}c.e=function(e){var t=[];o[e]?t.push(o[e]):0!==o[e]&&{3:1,4:1,7:1,8:1,9:1,10:1}[e]&&t.push(o[e]=new Promise((function(t,r){for(var n="static/css/"+({}[e]||e)+"."+{3:"f5127b95",4:"c3326729",5:"31d6cfe0",6:"31d6cfe0",7:"b90c9e30",8:"91d61676",9:"40dc1e9d",10:"d9470632",11:"31d6cfe0"}[e]+".chunk.css",a=c.p+n,u=document.getElementsByTagName("link"),i=0;i<u.length;i++){var f=(s=u[i]).getAttribute("data-href")||s.getAttribute("href");if("stylesheet"===s.rel&&(f===n||f===a))return t()}var l=document.getElementsByTagName("style");for(i=0;i<l.length;i++){var s;if((f=(s=l[i]).getAttribute("data-href"))===n||f===a)return t()}var d=document.createElement("link");d.rel="stylesheet",d.type="text/css",d.onload=t,d.onerror=function(t){var n=t&&t.target&&t.target.src||a,u=new Error("Loading CSS chunk "+e+" failed.\n("+n+")");u.code="CSS_CHUNK_LOAD_FAILED",u.request=n,delete o[e],d.parentNode.removeChild(d),r(u)},d.href=a,document.getElementsByTagName("head")[0].appendChild(d)})).then((function(){o[e]=0})));var r=a[e];if(0!==r)if(r)t.push(r[2]);else{var n=new Promise((function(t,n){r=a[e]=[t,n]}));t.push(r[2]=n);var u,i=document.createElement("script");i.charset="utf-8",i.timeout=120,c.nc&&i.setAttribute("nonce",c.nc),i.src=function(e){return c.p+"static/js/"+({}[e]||e)+"."+{3:"4659fffd",4:"9dc0e485",5:"1bca2fb9",6:"5bffba79",7:"9be0515c",8:"60528efe",9:"b0737020",10:"bab5604a",11:"c454418f"}[e]+".chunk.js"}(e);var f=new Error;u=function(t){i.onerror=i.onload=null,clearTimeout(l);var r=a[e];if(0!==r){if(r){var n=t&&("load"===t.type?"missing":t.type),o=t&&t.target&&t.target.src;f.message="Loading chunk "+e+" failed.\n("+n+": "+o+")",f.name="ChunkLoadError",f.type=n,f.request=o,r[1](f)}a[e]=void 0}};var l=setTimeout((function(){u({type:"timeout",target:i})}),12e4);i.onerror=i.onload=u,document.head.appendChild(i)}return Promise.all(t)},c.m=e,c.c=n,c.d=function(e,t,r){c.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},c.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},c.t=function(e,t){if(1&t&&(e=c(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(c.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)c.d(r,n,function(t){return e[t]}.bind(null,n));return r},c.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return c.d(t,"a",t),t},c.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},c.p="/",c.oe=function(e){throw console.error(e),e};var i=this.webpackJsonpstudent=this.webpackJsonpstudent||[],f=i.push.bind(i);i.push=t,i=i.slice();for(var l=0;l<i.length;l++)t(i[l]);var s=f;r()}([])</script><script src="/static/js/2.f8bea90a.chunk.js"></script><script src="/static/js/main.5e08bc3d.chunk.js"></script></body></html>
